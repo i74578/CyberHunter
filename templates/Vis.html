@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Network</title>
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style type="text/css">
+    #mynetwork {
+      width: 100vw;
+      height: 100vh;
+      border: 1px solid lightgray;
+    }
+  </style>
+
+  <!-- Updates website every 60 seconds-->
+  <meta http-equiv="refresh" content="60">
+</head>
+<body>
+  <div id="mynetwork"></div>
+  <script type="text/javascript">
+
+    // fetches the data from JSON
+    fetch('static/data/test.json')
+      .then(response => response.json())
+      .then(data => {
+        
+        var nodes = data.nodes;
+        var edges = data.edges;
+
+        //Creates the network 
+        var container = document.getElementById("mynetwork");
+        var networkData = { nodes: nodes, edges: edges };
+        var options = { nodes: { 
+          shape: 'circle' } };
+
+        var network = new vis.Network(container, networkData, options);
+        
+      })
+      .catch(error => console.error("Error" ,error));
+  </script>
+</body>
+</html>
+
+<!--         network.on("doubleClick", function(params) {
+          if(params.nodes.length > 0){
+            var nodeID = params.nodes[0];
+            var node = nodes.get(nodeID);
+
+            if(node.color == "green"){
+              node.color = "Red";
+              alert("Stopping Deauth");
+            } else {
+              node.color = "green";
+              alert("Deauth");
+            }
+            // Update the node
+            nodes.update(node);
+          }
+        });
+      -->
