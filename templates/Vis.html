@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>Network</title>
   <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
@@ -9,57 +10,72 @@
       right: 0;
       width: 73vw;
       height: 94vh;
-      border: 1px solid lightgray;
+      border: 1px solid rgb(0, 0, 0);
 
     }
   </style>
 </head>
 
-    <button class="Orale-Button" onClick="fetchData();">DTUsecure</button>
-  
-  <div id="mynetwork"></div>
-  <script type="text/javascript">
+<button class="Orale-Button" onClick="fetchData(ssid[0]);">DTUsecure</button>
+<button class="Orale-Button" onClick="fetchData(ssid[1]);">DTUGuest</button>
 
-    ssid = "DTUsecure";
+<div id="mynetwork"></div>
+<script type="text/javascript">
 
-    function fetchData(){
-          // fetches the data from JSON
+
+  var network, nodes, edges; 
+
+  //Just to test if it works
+  const ssid = ["DTUsecure", "DTUGuest"];
+
+  //Funtion to fetch the network from json, to visualize
+  function fetchData(ssid) {
     fetch('static/data/' + ssid + '.json')
       .then(response => response.json())
       .then(data => {
-        
-        var nodes = data.nodes;
-        var edges = data.edges;
+        nodes = new vis.DataSet(data.nodes);
+        edges = new vis.DataSet(data.edges);
 
-        //Creates the network 
         var container = document.getElementById("mynetwork");
         var networkData = { nodes: nodes, edges: edges };
-        var options = { nodes: {  
-          shape: 'circle' } };
-
-        var network = new vis.Network(container, networkData, options);
-        
-      })
-      .catch(error => console.error("Error" ,error));
-    }
-  </script>
-</body>
-</html>
-
-<!--         network.on("doubleClick", function(params) {
-          if(params.nodes.length > 0){
-            var nodeID = params.nodes[0];
-            var node = nodes.get(nodeID);
-
-            if(node.color == "green"){
-              node.color = "Red";
-              alert("Stopping Deauth");
-            } else {
-              node.color = "green";
-              alert("Deauth");
+        var options = {
+          nodes: {
+            shape: 'circle',
+            color: {
+              background: 'lightblue', 
+              border: 'lightblue'
             }
-            // Update the node
-            nodes.update(node);
+          },
+          interaction: {
+            hover: true
+          }
+        };
+        network = new vis.Network(container, networkData, options);
+
+        network.on("click", function (params) {
+          if (params.nodes.length > 0) {
+            Deauthenticate(params.nodes[0], nodes);
           }
         });
-      -->
+      })
+      .catch(error => console.error("Error", error));
+  }
+
+    // Funtion for visualizing when a client is pressed on
+  function Deauthenticate(node_id, nodes) {
+    var node_data = nodes.get(node_id);
+    if (node_data.color === 'red') {
+      node_data.color = "lightblue"; 
+      alert('stopping deauthentication: ' + node_data.label);
+    } else {
+      node_data.color = 'red'; 
+      alert('Deauthenticating: ' + node_data.label);
+    }
+
+    nodes.update(node_data);
+  }
+
+</script>
+</body>
+
+</html>
