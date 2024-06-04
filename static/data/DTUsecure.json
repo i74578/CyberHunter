@@ -1,0 +1,12 @@
+{ "nodes" : [
+  {"id" : "89:A8:EC:0A:B0:0F", "label" : "DTUsecure"},
+  {"id" : "BE:C9:EA:B1:5D:DF", "label" : "AP\nBE:C9:EA:B1:5D:DF"}, 
+  {"id" : "B6:DE:47:99:E2:13"  , "label" : "Client\nB6:DE:47:99:E2:13"},
+  {"id" : "D9:49:5A:AE:D0:DE"  , "label" : "Client\nD9:49:5A:AE:D0:DE"}],
+
+"edges" : [
+  {"from":"89:A8:EC:0A:B0:0F", "to":"BE:C9:EA:B1:5D:DF"},
+  {"from":"BE:C9:EA:B1:5D:DF", "to":"B6:DE:47:99:E2:13"},
+  {"from":"BE:C9:EA:B1:5D:DF", "to":"D9:49:5A:AE:D0:DE"}]
+}
+
