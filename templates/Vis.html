@@ -16,8 +16,8 @@
   </style>
 </head>
 
-<button class="Orale-Button" onClick="fetchData(ssid[0]);">DTUsecure</button>
-<button class="Orale-Button" onClick="fetchData(ssid[1]);">DTUGuest</button>
+<button class="Button1" onClick="fetchData(ssid[0]);">DTUsecure</button>
+<button class="Button2" onClick="fetchData(ssid[1]);">DTUGuest</button>
 
 <div id="mynetwork"></div>
 <script type="text/javascript">
@@ -56,7 +56,7 @@
           if (params.nodes.length > 0) {
             Deauthenticate(params.nodes[0], nodes);
           }
-        });
+        });   
       })
       .catch(error => console.error("Error", error));
   }
