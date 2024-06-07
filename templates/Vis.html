@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -18,19 +18,27 @@
 
 <button class="Button1" onClick="fetchData(ssid[0]);">DTUsecure</button>
 <button class="Button2" onClick="fetchData(ssid[1]);">DTUGuest</button>
+<button class="Button2" onClick="fetchData(ssid[2]);">Test</button>
+
+<div>
+  <input type="text" id="searchInput" placeholder="Search.." style="width: 200px;">
+  <input type="button" onclick="FocusSearch();" value="Focus search" style="width: 150px">
+</div>
+
 
 <div id="mynetwork"></div>
 <script type="text/javascript">
 
 
+  var DIR = "../static/img/"
   var network, nodes, edges; 
 
   //Just to test if it works
-  const ssid = ["DTUsecure", "DTUGuest"];
+  const ssid = ["DTUsecure", "DTUGuest", "test5"];
 
   //Funtion to fetch the network from json, to visualize
   function fetchData(ssid) {
-    fetch('static/data/' + ssid + '.json')
+    fetch('static/data/' + ssid + '.json') 
       .then(response => response.json())
       .then(data => {
         nodes = new vis.DataSet(data.nodes);
@@ -39,13 +47,7 @@
         var container = document.getElementById("mynetwork");
         var networkData = { nodes: nodes, edges: edges };
         var options = {
-          nodes: {
-            shape: 'circle',
-            color: {
-              background: 'lightblue', 
-              border: 'lightblue'
-            }
-          },
+          nodes: {},
           interaction: {
             hover: true
           }
@@ -65,7 +67,7 @@
   function Deauthenticate(node_id, nodes) {
     var node_data = nodes.get(node_id);
     if (node_data.color === 'red') {
-      node_data.color = "lightblue"; 
+      node_data.group = 2; 
       alert('stopping deauthentication: ' + node_data.label);
     } else {
       node_data.color = 'red'; 
@@ -74,6 +76,12 @@
 
     nodes.update(node_data);
   }
+
+  function FocuSearch() {
+
+    
+  }
+
 
 </script>
 </body>

@@ -1,8 +1,8 @@
 { "nodes" : [
-  {"id" : "89:A8:EC:0A:B0:0F", "label" : "DTUsecure"},
-  {"id" : "BE:C9:EA:B1:5D:DF", "label" : "AP\nBE:C9:EA:B1:5D:DF"}, 
+  {"id" : "89:A8:EC:0A:B0:0F", "label" : "DTUsecure", "clickable": false},
+  {"id" : "BE:C9:EA:B1:5D:DF", "label" : "AP\nBE:C9:EA:B1:5D:DF",  "clickable": false}, 
   {"id" : "B6:DE:47:99:E2:13"  , "label" : "Client\nB6:DE:47:99:E2:13"},
-  {"id" : "D9:49:5A:AE:D0:DE"  , "label" : "Client\nD9:49:5A:AE:D0:DE"}],
+  {"id" : "D9:49:5A:AE:D0:DE"  , "label" : "Client\nD9:49:5A:AE:D0:DE", "Shape": "image", "image": "../static/img/Client.png"}],
 
 "edges" : [
   {"from":"89:A8:EC:0A:B0:0F", "to":"BE:C9:EA:B1:5D:DF"},

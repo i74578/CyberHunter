@@ -1,7 +1,7 @@
 {"nodes" : [
-    {"id" : "DD-E8-8A-06-0F-34", "label" : "DTU Guest"},
-    {"id" : "10:a8:29:7a:06:cb", "label" : "AP\n10:a8:29:7a:06:cb"}, 
-    {"id" : "e0:0a:f6:6b:2b:65"  , "label" : "AP\ne0:0a:f6:6b:2b:65"},
+    {"id" : "DD-E8-8A-06-0F-34", "label" : "DTU Guest", "clickable": false},
+    {"id" : "10:a8:29:7a:06:cb", "label" : "AP\n10:a8:29:7a:06:cb", "title": "hey" }, 
+    {"id" : "e0:0a:f6:6b:2b:65"},
     {"id" : "4"  , "label" : "Client\ne0:0a:f6:8e:84:29"},
     {"id" : "5"  , "label" : "Client\n24:d3:37:3a:57:78"},
     {"id" : "6"  , "label" : "Client\n34:2e:b7:fe:1d:7a"},
