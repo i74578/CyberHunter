@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+        <script type="text/javascript" charset="utf-8"></script>
+
+</head>
+
+<body>
+
+
+<script>
+const socket = io();
+$(document).ready(function() {});
+
+socket.on("connect", () => {
+    console.log("connected");
+});
+
+socket.on("disconnect", () => {
+    console.log("disconnected");
+});
+
+function myupdate() {
+    socket.emit("my_event", function() {});
+}
+
+// Event sent by Server//
+socket.on("addToGraph", function(msg) {
+       console.log("Received:"+msg.nodes);
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+
+<html lang="en">
+
+<head>
+  <title>Network</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style type="text/css">
+    #mynetwork {
+      position: absolute;
+      right: 0;
+      width: 73vw;
+      height: 94vh;
+      border: 1px solid rgb(0, 0, 0);
+
+    }
+  </style>
+</head>
+
+<button class="Button1" onClick="fetchData(ssid[0]);">DTUsecure</button>
+<button class="Button2" onClick="fetchData(ssid[1]);">DTUGuest</button>
+<button class="Button2" onClick="fetchData(ssid[2]);">Test</button>
+
+<div>
+  <input type="text" id="searchInput" placeholder="Search.." style="width: 200px;">
+  <input type="button" onclick="FocusSearch();" value="Focus search" style="width: 150px">
+</div>
+
+
+<div id="mynetwork"></div>
+<script type="text/javascript">
+
+
+  var DIR = "../static/img/"
+  var network, nodes, edges; 
+
+  //Just to test if it works
+  const ssid = ["DTUsecure", "DTUGuest", "test5"];
+
+  //Funtion to fetch the network from json, to visualize
+  function fetchData(ssid) {
+    fetch('static/data/' + ssid + '.json') 
+      .then(response => response.json())
+      .then(data => {
+ 
+      })
+      .catch(error => console.error("Error", error));
+  }
+
+    // Funtion for visualizing when a client is pressed on
+  function Deauthenticate(node_id, nodes) {
+    var node_data = nodes.get(node_id);
+    if (node_data.color === 'red') {
+      node_data.group = 2; 
+      alert('stopping deauthentication: ' + node_data.label);
+    } else {
+      node_data.color = 'red'; 
+      alert('Deauthenticating: ' + node_data.label);
+    }
+
+    nodes.update(node_data);
+  }
+
+  function FocuSearch() {
+
+    
+  }
+
+
+  const socket = io();
+  $(document).ready(function() {});
+
+  socket.on("connect", () => {
+    console.log("connected");
+  });
+
+  socket.on("disconnect", () => {
+    console.log("disconnected");
+  });
+
+  function myupdate() {
+    socket.emit("my_event", function() {});
+  }
+
+  socket.on("initGraph", function(msg) {
+    console.log("initGraph");
+    var parsedMsg = JSON.parse(msg);
+    console.log("Parsed");
+
+
+    nodes = new vis.DataSet(parsedMsg.nodes);
+    edges = new vis.DataSet(parsedMsg.edges);
+
+    var container = document.getElementById("mynetwork");
+    var networkData = { nodes: nodes, edges: edges };
+    var options = {
+      nodes: {},
+      interaction: {
+        hover: true
+      }
+    };
+    network = new vis.Network(container, networkData, options);
+
+    network.on("click", function (params) {
+      if (params.nodes.length > 0) {
+        Deauthenticate(params.nodes[0], nodes);
+      }
+    });  
+    console.log("Added to graph");
+  });
+
+  socket.on("addToGraph", function(msg) {
+    console.log("addToGraph");
+    var parsedMsg = JSON.parse(msg);
+    nodes.add(parsedMsg.nodes);
+    edges.add(parsedMsg.edges);
+  });
+
+
+</script>
+</body>
+
+</html>

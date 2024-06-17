@@ -1,0 +1,26 @@
+{"nodes" : [
+    {"id" : "DD-E8-8A-06-0F-34", "label" : "DTU Guest", "clickable": false},
+    {"id" : "10:a8:29:7a:06:cb", "label" : "AP\n10:a8:29:7a:06:cb", "title": "hey" }, 
+    {"id" : "e0:0a:f6:6b:2b:65"},
+    {"id" : "4"  , "label" : "Client\ne0:0a:f6:8e:84:29"},
+    {"id" : "5"  , "label" : "Client\n24:d3:37:3a:57:78"},
+    {"id" : "6"  , "label" : "Client\n34:2e:b7:fe:1d:7a"},
+    {"id" : "7"  , "label" : "Client\ne0:0a:f6:6b:2b:65"},
+    {"id" : "8"  , "label" : "Client\n34:2e:b7:fe:1d:7a"},
+    {"id" : "9"  , "label" : "Client\n34:2e:b7:fe:1d:7a"},
+    {"id" : "10"  , "label" : "Client\n34:2e:b7:fe:1d:7a"}
+    
+    
+     ],
+     "edges":[
+        {"from":"DD-E8-8A-06-0F-34", "to":"10:a8:29:7a:06:cb", "label":""}
+        ,{"from":"DD-E8-8A-06-0F-34", "to":"e0:0a:f6:6b:2b:65", "label":""}
+        ,{"from":"10:a8:29:7a:06:cb", "to":"4", "label":""}
+        ,{"from":"10:a8:29:7a:06:cb", "to":"5", "label":""}
+        ,{"from":"e0:0a:f6:6b:2b:65", "to":"6", "label":""}
+        ,{"from":"e0:0a:f6:6b:2b:65", "to":"7", "label":""}
+        ,{"from":"e0:0a:f6:6b:2b:65", "to":"8", "label":""}
+        ,{"from":"e0:0a:f6:6b:2b:65", "to":"9", "label":""}
+        ,{"from":"10:a8:29:7a:06:cb", "to":"10", "label":""}
+      ]
+}

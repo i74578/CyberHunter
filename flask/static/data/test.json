@@ -1,0 +1,25 @@
+{"nodes" : [
+    {"id" : "1", "label" : "DTU Secure"},
+    {"id" : "2", "label" : "AP"},
+    {"id" : "3"  , "label" : "AP"},
+    {"id" : "4"  , "label" : "Client"},
+    {"id" : "5"  , "label" : "Client"},
+    {"id" : "6"  , "label" : "Client"},
+    {"id" : "7"  , "label" : "Client"},
+    {"id" : "8"  , "label" : "Client"},
+    {"id" : "9"  , "label" : "Client"}
+    
+    
+     ],
+     "edges":[
+        {"from":"1", "to":"2", "label":""}
+        ,{"from":"1", "to":"3", "label":""}
+        ,{"from":"2", "to":"4", "label":""}
+        ,{"from":"2", "to":"5", "label":""}
+        ,{"from":"3", "to":"6", "label":""}
+        ,{"from":"3", "to":"7", "label":""}
+        ,{"from":"3", "to":"8", "label":""}
+        ,{"from":"3", "to":"9", "label":""}
+      ]
+}
+
