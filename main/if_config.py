@@ -1,6 +1,11 @@
 import subprocess 
 
 def setMonitorMode(interfaces):
+    ''' 
+    Set interfaces or interface to monitor mode
+    Params:
+        Single interface as string or multiple interfaces as list of strings
+    '''
     if isinstance(interfaces,str):
         interfaces = [interfaces]
     for interface in interfaces:
@@ -9,8 +14,7 @@ def setMonitorMode(interfaces):
         assert 0 == subprocess.call(["sudo","iw", interface, "set", "monitor", "fcsfail"])
         assert 0 == subprocess.call(["sudo","ip", "link", "set", interface, "up"])
 
-def setChannel(interface,c,b=""):
+def setChannel(interface,c):
+    ''' Set at interface to a specific 20MHz channel '''
     command = ['sudo','iw','dev',interface,'set','channel',str(c),'HT20']
-    if b:
-        command.append(str(b))
     assert 0 == subprocess.call(command,stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

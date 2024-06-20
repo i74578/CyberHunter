@@ -21,7 +21,7 @@ def getVendor(Vendor,type):
 
 def _getSSIDnodes(c,rowFilter="%"):
     c.execute("SELECT DISTINCT ssid FROM APs WHERE id LIKE ""%s""",(str(rowFilter),))
-    nodes = [dict(id=row[0],label=row[0],group=4) for row in c.fetchall()]
+    nodes = [dict(id=row[0],label=row[0],group="ssid") for row in c.fetchall()]
     return nodes
 
 
@@ -39,7 +39,7 @@ def _getAPsnodes(c,rowFilter="%"):
                 pmfState = "Required"
         title = row[0]+"\n"+row[1]+"\nChannel:"+str(row[2])+"\n"+row[3]+"\nPMF:"+pmfState
         
-        nodes.append(dict(id=row[0],title=title,group=1,shape="circularImage",image=getVendor(row[1],"AP")))
+        nodes.append(dict(id=row[0],title=title,group="ap",shape="circularImage",image=getVendor(row[1],"AP")))
 
     return nodes
 
@@ -48,7 +48,7 @@ def _getAPsnodes(c,rowFilter="%"):
 
 def _getClientNodes(c,rowFilter="%"):
     c.execute("SELECT mac,vendor FROM Clients WHERE id LIKE ""%s""",(str(rowFilter),))
-    nodes = [dict(id=row[0],title=row[0]+"\n"+row[1],group=0,shape="circularImage",image=getVendor(row[1],"Client")) for row in c.fetchall()]
+    nodes = [dict(id=row[0],title=row[0]+"\n"+row[1],group="client",shape="circularImage",image=getVendor(row[1],"Client")) for row in c.fetchall()]
     if rowFilter != "%":
         print("filter set")
         print(nodes)
@@ -106,7 +106,7 @@ def getNewData(table,row):
         SSIDcount = cur.fetchall()[0][0]
         if int(SSIDcount) == 1:
             print("This is a new SSID")
-            newNodes += [dict(id=newAP[0],label=newAP[0],group=4)]
+            newNodes += [dict(id=newAP[0],label=newAP[0],group="ssid")]
         #newNodes += [dict(id=newAP[1],title=newAP[1]+"\n"+newAP[2],group=1,shape="circularImage",image=getVendor(newAP[2],"AP"))]
         newNodes += _getAPsnodes(cur,row)
         print(_getAPsnodes(cur,row))

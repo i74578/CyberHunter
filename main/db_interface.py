@@ -52,9 +52,9 @@ class dbInterface:
         return rows[0][0]
         
     
-    def get_ap_channel(self,ap):
+    def get_ap_channel(self,ap_adr):
         mydb,cur = self._connectToDB()
-        cur.execute("select channel from APs WHERE mac=""%s""",(str(ap),))
+        cur.execute("select channel from APs WHERE mac=""%s""",(str(ap_adr),))
         rows = cur.fetchall()
         if len(rows) != 1 or len(rows[0]) != 1:
             print("missing")
@@ -74,6 +74,17 @@ class dbInterface:
         mydb.disconnect()
         return str(rows[0][0])
     
+    def get_ap_ssid(self,ap_adr):
+        mydb,cur = self._connectToDB()
+        cur.execute("select SSID FROM APs WHERE mac=""%s""",(str(ap_adr),))
+        rows = cur.fetchall()
+        if len(rows) != 1 or len(rows[0]) != 1:
+            print("missing")
+            return ""
+        print("found:"+ str(rows[0][0]))
+        mydb.disconnect()
+        return str(rows[0][0])
+
     def get_aps_by_ssid(self,ssid):
         mydb,cur = self._connectToDB()
         cur.execute("select mac,channel FROM APs WHERE SSID=""%s"" ORDER BY channel ASC",(str(ssid),))
@@ -85,6 +96,7 @@ class dbInterface:
         print("found:"+ str(APs))
         mydb.disconnect()
         return APs
+    
 
     def clear_db(self):
         mydb,cur = self._connectToDB()
@@ -92,5 +104,3 @@ class dbInterface:
         cur.execute("DELETE FROM Clients")
         mydb.commit()
         mydb.disconnect()
-
-

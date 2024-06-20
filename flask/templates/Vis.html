@@ -19,6 +19,7 @@
         width: 100%;
         margin: 0px;
         padding: 0px;
+        background-color: #222222;
       }
 
       #mynetwork {
@@ -72,7 +73,7 @@
         left: 0px;
         width: 100%;
         height: 100%;
-        background-color:antiquewhite;
+        background-color:#222222;
         opacity: 1;
         z-index: 3;
       }
@@ -94,7 +95,7 @@
 
   </style>
 </head>
-
+<body data-bs-theme="dark">
 
 <div class="loadingOverlay">
     <div class="progress">
@@ -107,12 +108,12 @@
 <div class="overlay">
     <div>
         <div class="form-group searchTextbox">
-            <input type="text" id="myAutocomplete" autocomplete="off" class="form-control" />
+            <input type="text" id="myAutocomplete" autocomplete="off" class="form-control bg-secondary text-light" />
         </div>
 
 
-        <input class="idleButton" type="button" onclick="setMode('idle');" value="Idle" >
-        <input class="sniffButton" type="button" onclick="setMode('sniff');" value="Sniff">
+        <input class="idleButton btn btn-secondary" type="button" onclick="setMode('idle');" value="Idle" >
+        <input class="sniffButton btn btn-secondary" type="button" onclick="setMode('sniff');" value="Sniff">
     </div>
 </div> 
 
@@ -162,24 +163,43 @@
     }
 
 
-        // Funtion for visualizing when a client is pressed on
-    function deauthenticate(target_mac) {
+    // Funtion for visualizing when a client is pressed on
+    function deauth_attack(target_mac) {
         var node_data = nodes.get(target_mac);
-        // Check if node is a client
+
         console.log("checking: " + node_data);
-        if (node_data.color == 'red') {
+        if (node_data.color == 'OrangeRed') {
             node_data.color = null; 
             console.log('stopping deauthentication: ' + node_data.id);
             socket.emit("setMode", {'mode':'idle'});
         }    
         else {
-            node_data.color = 'red'; 
+            node_data.color = 'OrangeRed'; 
             console.log('Deauthenticating: ' + node_data.id);
-            socket.emit("setMode", {'mode':'deauth','target':node_data.id,'entireSSID':true});
+            socket.emit("setMode", {'mode':'deauth_attack','target':node_data.id});
         }
 
         nodes.update(node_data);
     }
+
+    function csa_attack(target_mac){
+        var node_data = nodes.get(target_mac);
+
+        console.log("checking: " + node_data);
+        if (node_data.color == 'OrangeRed') {
+            node_data.color = null; 
+            console.log('stopping deauthentication: ' + node_data.id);
+            socket.emit("setMode", {'mode':'idle'});
+        }    
+        else {
+            node_data.color = 'OrangeRed'; 
+            console.log('Deauthenticating: ' + node_data.id);
+            socket.emit("setMode", {'mode':'csa_attack','target':node_data.id});
+        }
+
+        nodes.update(node_data);
+    }
+
 
         //Literally does nothing rn
     function focusSelect(item) {
@@ -279,7 +299,18 @@
         },
         interaction: {
             hover: true
-        }
+        },
+        groups: {
+            ssid: {
+                color: "HotPink",
+            },
+            client: {
+                color: "Orange",
+            },
+            ap: { 
+                color: "LightBlue" 
+            }
+        },
     };
 
     network = new vis.Network(container, networkData, options);
@@ -289,10 +320,15 @@
         if (params.nodes.length == 1 ) {
             let target_mac = params.nodes[0]
             let node_data = nodes.get(target_mac);
-            // Check if node is a client
-            if (node_data.group == 0){
-                deauthenticate(target_mac);
-            }
+            // Perform standard deauth attack if client is selected
+            if (node_data.group == "client"){
+                deauth_attack(target_mac);
+            } 
+            // Perform CSA attack if AP is selected
+            else if(node_data.group == "ap"){
+                console.log("AAAAA");
+                csa_attack(target_mac);
+            } 
         }
     });  
 

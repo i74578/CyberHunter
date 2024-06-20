@@ -1,8 +1,11 @@
-from logging_config import setup_logger
-from mac_vendor_lookup import MacLookup, BaseMacLookup
-from scapy.all import Dot11, sniff, RadioTap, Dot11Beacon, Dot11Elt, EAPOL
 import threading
 import os
+
+from logging_config import setup_logger
+from mac_vendor_lookup import MacLookup, BaseMacLookup
+from scapy.layers.dot11 import Dot11, Dot11Beacon, Dot11Elt, RadioTap
+from scapy.layers.eap import EAPOL
+from scapy.all import sniff
 
 logger = setup_logger(__name__)
 
@@ -16,11 +19,11 @@ class Sniffer:
         self.interfaces = interfaces
         self.stop_event = threading.Event()
         self.thread = []
-        self.known_aps = []
-        self.known_clients = []
-        self.macLookup = MacLookup()
+        self.known_aps = set()
+        self.known_clients = set()
+        self.mac_lookup = MacLookup()
         if not os.path.isfile(BaseMacLookup.cache_path):
-            self.macLookup.update_vendors()
+            self.mac_lookup.update_vendors()
 
 
 
@@ -55,12 +58,12 @@ class Sniffer:
                     beaconInfo['channel'] = self._freq_to_channel(packet[RadioTap].Channel)
                 beacon_ap_mac = packet.addr3.replace(":","")
                 if not beacon_ap_mac in self.known_aps:
-                    AP_vendor = self._MAC_lookup(beacon_ap_mac)
+                    AP_vendor = self._get_mac_vendor(beacon_ap_mac)
                     logger.info('Discovered new AP: ' + str(beacon_ap_mac) + " : " + str(beaconInfo['ssid']) + " : " + str(AP_vendor)+ " : " +str(beaconInfo['channel']))
                     pmfState = self._getPMFstatus(packet)
                     rowId = self.db_interface.add_ap(beacon_ap_mac,beaconInfo['ssid'],AP_vendor,beaconInfo['channel'],', '.join(beaconInfo['crypto']),pmfState)
                     self.network_update_callback({'table':'APs',"rowId":rowId})
-                    self.known_aps.append(beacon_ap_mac)
+                    self.known_aps.add(beacon_ap_mac)
 
             # Data frame
             # Assume that non-EAPOL data frames, indicate stations are associated 
@@ -77,36 +80,31 @@ class Sniffer:
                         BSSID = packet.addr1.replace(":","")
                         Client = packet.addr2.replace(":","")
                     if not Client in self.known_clients and self._isUnicast(Client):
-                        vendor = self._MAC_lookup(Client)
-                        logger.info('Discovered new Client: ' + str(Client) + " AP:" + str(BSSID) + " : " + str(vendor))
+                        vendor = self._get_mac_vendor(Client)
+                        logger.info("Discovered new Client: %s AP:%s : %s",str(Client),str(BSSID),str(vendor))
                         rowId = self.db_interface.add_client(Client,BSSID,vendor)
                         self.network_update_callback({'table':'Clients',"rowId":rowId})
-                        self.known_clients.append(Client)
+                        self.known_clients.add(Client)
 
             # Block ACK and RTS
             # Assume that block ACK and RTS frames, indicate stations are associated 
             if packet.type == 1 and (packet.subtype == 9 or packet.subtype == 11):
-                
                 addr1 = packet.addr1.replace(":","")
                 addr2 = packet.addr2.replace(":","")
 
                 if addr1 in self.known_aps and addr2 not in self.known_clients:
-                    vendor = self._MAC_lookup(addr2)
-                    logger.info('Discovered new Client: ' + str(addr2) + " AP:" + str(addr1) + " : " + str(vendor))
+                    vendor = self._get_mac_vendor(addr2)
+                    logger.info("Discovered new Client: %s AP:%s : %s",str(addr2),str(addr1),str(vendor))
                     rowId = self.db_interface.add_client(addr2,addr1,vendor)
                     self.network_update_callback({'table':'Clients',"rowId":rowId})
-                    self.known_clients.append(addr2)
+                    self.known_clients.add(addr2)
 
                 if addr2 in self.known_aps and addr1 not in self.known_clients:
-                    vendor = self._MAC_lookup(addr1)
-                    logger.info('Discovered new Client: ' + str(addr1) + " AP:" + str(addr2) + " : " + str(vendor))
+                    vendor = self._get_mac_vendor(addr1)
+                    logger.info("Discovered new Client: %s AP:%s : %s",str(addr1),str(addr2),str(vendor))
                     rowId = self.db_interface.add_client(addr1,addr2,vendor)
                     self.network_update_callback({'table':'Clients',"rowId":rowId})
-                    self.known_clients.append(addr1)
-
-
-                #print("Subtype:"+str(packet.subtype)+" Addr1:"+str(packet.addr1)+" Addr2:"+str(packet.addr2))
-
+                    self.known_clients.add(addr1)
 
 
 
@@ -132,11 +130,11 @@ class Sniffer:
         MSB = int(addr[0:2], 16)
         return (MSB >> 1) & 1
 
-    def _MAC_lookup(self,addr):
+    def _get_mac_vendor(self,addr):
         if self._isLocallyAdministered(addr):
             return "Random"
         try:
-            return self.macLookup.lookup(addr)
+            return self.mac_lookup.lookup(addr)
         except:
             return "Unknown"
 
