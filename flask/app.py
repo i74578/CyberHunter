@@ -26,11 +26,10 @@ def connect():
 @sio.on("setMode")
 def rx_setmode(data):
     """ Forward message about changing mode to the sniffer/deauth """
-    if data['mode'] == "sniff" and data['clear']:
+    if data['mode'] == "sniff":
         sio.emit("clearGraph")
     print("Received setMode: " + str(data))
     sio.emit("setMode",data,namespace="/backendConnection")
-
 
 # On messages from sniffer/deauther
 @sio.on('connect',namespace="/backendConnection")
@@ -46,6 +45,10 @@ def on_network_update_msg(data):
     """ Forward new data message to all clients """
     new_data = network_fetcher.get_new_data(data['table'],data['rowId'])
     broadcast_network_update_msg(new_data)
+
+@sio.on('modeReady',namespace="/backendConnection")
+def mode_ready(data):
+    sio.emit("modeReady","{}")
 
 # Flask endpoints
 @app.route("/")

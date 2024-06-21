@@ -1,7 +1,6 @@
-// Funtion for doing Attacks and visualize it on the node or AP
-function Attacks(targetMac, mode) {
+// Funtion for performing attacks and visualize it on the node or AP
+function perform_attack(targetMac, mode) {
     const nodeData = nodes.get(targetMac);
-
     if (nodeData.color === 'OrangeRed') {
         nodeData.color = null;
         socket.emit("setMode", { 'mode': 'idle', 'target': nodeData.id });
@@ -9,16 +8,15 @@ function Attacks(targetMac, mode) {
         nodeData.color = 'OrangeRed';
         socket.emit("setMode", { 'mode': mode, 'target': nodeData.id });
     }
-
     nodes.update(nodeData);
 }
 
 function deauth_attack(target_mac) {
-    Attacks(target_mac, 'deauth_attack');
+    perform_attack(target_mac, 'deauth_attack');
 }
 
 function csa_attack(target_mac) {
-    Attacks(target_mac, 'csa_attack');
+    perform_attack(target_mac, 'csa_attack');
 }
 
 //Focus mechanising to focus on specific node/AP
@@ -36,6 +34,8 @@ function focusSelect(item) {
 }
 
 const socket = io();
+var waitingForReadyState = false;
+
 $(document).ready(function() {});
 
 socket.on("connect", () => {
@@ -47,17 +47,18 @@ socket.on("disconnect", () => {
 });
 
 function setMode(mode) {
+    waitingForReadyState = true;
     if (mode == "idle"){
         socket.emit("setMode", {'mode':'idle'});
     }
     else if (mode == "sniff"){
-        socket.emit("setMode", {'mode':'sniff','clear':true});
+        socket.emit("setMode", {'mode':'sniff'});
     }
 }
 
 socket.on("initGraph", function(msg) {
+    if (waitingForReadyState){return}
     var parsedMsg = JSON.parse(msg);
-
     if (parsedMsg.nodes.length == 0 && parsedMsg.edges.length == 0){
         setProgressBar("100%");
     }
@@ -65,7 +66,6 @@ socket.on("initGraph", function(msg) {
         nodes = new vis.DataSet(parsedMsg.nodes);
         edges = new vis.DataSet(parsedMsg.edges);
         network.setData({nodes:nodes,edges:edges})
-
         let ids = parsedMsg.nodes.map(object => object.id);
         console.log(ids);
         addOptionsToDatalist(ids);
@@ -73,6 +73,7 @@ socket.on("initGraph", function(msg) {
 });
 
 socket.on("addToGraph", function(msg) {
+    if (waitingForReadyState){return}
     var parsedMsg = JSON.parse(msg);
     nodes.add(parsedMsg.nodes);
     edges.add(parsedMsg.edges);
@@ -86,6 +87,10 @@ socket.on("clearGraph", function(msg) {
     while(dropdownMenuNodes.length > 0) {
         dropdownMenuNodes.pop();
     }
+});
+
+socket.on("modeReady", function(msg) {
+    waitingForReadyState = false;
 });
 
 var datalist = document.getElementById("list-nodes");
@@ -160,6 +165,11 @@ function setProgressBar(percentage){
     }
 }
 
+function addOptionsToDatalist(optionValue) {
+    for (let i=0;i<optionValue.length;i++){
+        dropdownMenuNodes.push({label:optionValue[i],value:optionValue[i]});
+    }
+}
 
 dropdownMenuNodes = [{ label: "init", value: "init" }];
 $('#myAutocomplete').autocomplete({
@@ -170,9 +180,3 @@ $('#myAutocomplete').autocomplete({
     dropdownClass: 'scrolled-dropdown',
     onSelectItem:focusSelect
 });
-
-function addOptionsToDatalist(optionValue) {
-    for (let i=0;i<optionValue.length;i++){
-        dropdownMenuNodes.push({label:optionValue[i],value:optionValue[i]});
-    }
-}

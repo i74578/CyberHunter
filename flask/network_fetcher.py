@@ -107,7 +107,7 @@ class NetworkFetcher:
 
         if table == "APs":
             # If the SSID of the new AP is unique, then add to nodes variable
-            cur.execute("SELECT COUNT(*),ssid FROM APs WHERE ssid=(SELECT ssid FROM APs WHERE id=%s)",(str(row),))
+            cur.execute("SELECT COUNT(*),ssid FROM APs WHERE ssid=(SELECT ssid FROM APs WHERE id=%s) AND id<=%s",(str(row),str(row),))
             result = cur.fetchall()[0]
             ssid = result['ssid']
             ssid_count = result['COUNT(*)']

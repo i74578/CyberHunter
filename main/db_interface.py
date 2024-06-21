@@ -60,7 +60,7 @@ class DbInterface:
             query = "SELECT bssid,vendor,ssid,channel,security,pmf from APs WHERE bssid=%s"
             args = (kwargs['bssid'],)
         elif "client" in kwargs:
-            query = "SELECT APs.bssid,APs.vendor,APs.ssid,APs.channel,APs.security,APs.pmf FROM Clients INNER JOIN APs ON Clients.macaddr = APs.bssid WHERE Clients.macaddr=%s"
+            query = "SELECT APs.bssid,APs.vendor,APs.ssid,APs.channel,APs.security,APs.pmf FROM Clients INNER JOIN APs ON Clients.bssid = APs.bssid WHERE Clients.macaddr=%s"
             args = (kwargs['client'],)
         elif "ssid" in kwargs:
             query = "SELECT bssid,vendor,ssid,channel,security,pmf FROM APs WHERE ssid=%s ORDER BY channel ASC"
@@ -69,9 +69,8 @@ class DbInterface:
             raise Exception("Invalid parameter")
         cur.execute(query,args)
         results = cur.fetchall()
-        print("Result:"+str(results))
         if len(results) < 1:
-            raise Exception("Failed to get AP from DB")
+            raise Exception("Failed to get AP from DB: " + str(kwargs))
         mydb.disconnect()
         return results        
 
