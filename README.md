@@ -7,8 +7,8 @@ By double tapping on an AP, a channel switch annoncement attack is performed. Th
 ![image](https://github.com/i74578/DTU-34229-Deauther/assets/26153040/8c2cc6a0-0fd0-4d1e-a89b-9732a0e8bc22)
 
 # Prerequisites
-One or more network cards supporting monitor mode is required.
-A mariadb database with the following tables is required:
+- One or more network cards supporting monitor mode is required.
+- A mariadb database with the following tables is required:
 ```
 CREATE TABLE `APs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -35,7 +35,7 @@ CREATE TABLE `Clients` (
 )
 ```
 
-The interfaces used for sniffing should be unmanaged by the NetworkManager service. This can be done by adding the following configuration to the networkmanager.conf located at /etc/NetworkManager/
+- The interfaces used for sniffing should be unmanaged by the NetworkManager service. This can be done by adding the following configuration to the networkmanager.conf located at /etc/NetworkManager/
 ```
 [main]
 plugins=keyfile
