@@ -74,8 +74,4 @@ websocket-client==1.8.0
 Werkzeug==3.0.3
 wsproto==1.2.0
 yarg==0.1.9
-<<<<<<< HEAD
 yarl==1.9.4
-=======
-yarl==1.9.4
->>>>>>> 8cb9ff67320ff57db9ad02a254b1aaeded8809cc

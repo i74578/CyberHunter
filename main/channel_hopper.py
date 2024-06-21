@@ -1,7 +1,7 @@
 import math
 import time
 import threading
-import if_config as if_config
+import if_config
 
 from logging_config import setup_logger
 logger = setup_logger(__name__)
@@ -47,7 +47,7 @@ class ChannelHopper:
         channel_index = -1
         while not self.stop_event.is_set():
             channel_index = (channel_index + 1) % len(channels)
-            if_config.setChannel(interface,channels[channel_index])
+            if_config.set_channel(interface,channels[channel_index])
             logger.debug('%s : Channel set to: %s',str(interface),str(channels[channel_index]))
             time.sleep(delay)
         logger.debug('%s : Committing Suicide ',str(interface))
