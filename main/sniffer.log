@@ -1,2 +1,0 @@
-2024-06-21 11:11:06 MainThread DEBUG    Starting new HTTP connection (1): localhost:5000
-2024-06-21 11:11:06 MainThread DEBUG    http://localhost:5000 "GET /socket.io/?transport=polling&EIO=4&t=1718961066.3760047 HTTP/1.1" 200 None
