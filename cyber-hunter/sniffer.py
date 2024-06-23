@@ -74,7 +74,7 @@ class Sniffer:
             # Process data non-EAPOL data frames
             # Assume that non-EAPOL data frames, indicate stations are associated
             if packet.type == 2 and not packet.haslayer(EAPOL):
-                # Determine BSSID and SA/TA addresses by checking the following fields: 
+                # Determine BSSID and SA/TA addresses by checking the following fields:
                 # To_DS, From_DS, Addr1 and Addr2
                 to_ds = packet.FCfield & 0x1 != 0
                 from_ds = packet.FCfield & 0x2 != 0
