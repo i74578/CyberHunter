@@ -1,5 +1,6 @@
 import logging
 
+
 def setup_logger(name=None):
     logging.basicConfig(
         filename='sniffer.log',
@@ -8,14 +9,9 @@ def setup_logger(name=None):
         datefmt='%Y-%m-%d %H:%M:%S',
         filemode='w+'
     )
-
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
-
     return logger
 
 
 setup_logger()
-
-
-
