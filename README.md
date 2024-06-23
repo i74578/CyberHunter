@@ -51,6 +51,6 @@ pip3 install -r requirements.txt
 
 # Usage
 To use the program:
-- Set the config values in the controller.py file
+- Set the config values in the CyberHunter/core.py file
 - Run the flask application located in the flask directory
-- Run the controller.py file located in the main directory
+- Run the CyberHunter/core.py file
