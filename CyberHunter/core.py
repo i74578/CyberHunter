@@ -1,5 +1,6 @@
 """ This module is the controller for the sniffer/deauth component """
 import socketio 
+from mac_vendor_lookup import MacLookup, BaseMacLookup, VendorNotFoundError
 from logging_config import setup_logger
 from db_interface import DbInterface
 from deauther import Deauther
@@ -64,7 +65,16 @@ def on_set_mode(data):
 
 
 if __name__ == '__main__':
+    print("Checking vendor loopkup file")
+    BaseMacLookup.cache_path = os.path.join(os.path.dirname(__file__),"vendorMacCache")
+    if not os.path.isfile(BaseMacLookup.cache_path):
+        print("Downloading vendor lookup file")
+        MacLookup().update_vendors()
+    print("Setting interfaces to monitor mode")
     if_config.set_monitor_mode(INTERFACES)
+    print("Clearing database")
     db_interface.clear_db()
+    print("Connecting to flask-app via socket.IO")
     sio.connect('http://localhost:5000', namespaces=['/backendConnection'])
+    print("Waiting")
     sio.wait()
