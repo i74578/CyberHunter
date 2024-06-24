@@ -1,4 +1,5 @@
 """ This module is the controller for the sniffer/deauth component """
+import os
 import socketio 
 from mac_vendor_lookup import MacLookup, BaseMacLookup, VendorNotFoundError
 from logging_config import setup_logger
