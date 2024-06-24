@@ -11,7 +11,7 @@ logger = setup_logger(__name__)
 
 
 class Sniffer:
-    BaseMacLookup.cache_path = "./vendorMacCache"
+    BaseMacLookup.cache_path = os.path.join(os.path.dirname(__file__),"vendorMacCache")
 
     def __init__(self, db_interface, interfaces, network_update_callback):
         self.db_interface = db_interface
