@@ -59,3 +59,4 @@ To use the program:
 - Set the config values in the CyberHunter/core.py file
 - Run the flask application using: ```flask --app flask-app/app.py run --host 0.0.0.0```
 - Run the CyberHunter component using: ```sudo .venv/bin/python3 CyberHunter/core.py```
+- Access the page at http://127.0.0.1:5000 in a browser
