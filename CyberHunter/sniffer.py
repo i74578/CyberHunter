@@ -2,7 +2,7 @@ import threading
 import os
 
 from logging_config import setup_logger
-from mac_vendor_lookup import MacLookup, BaseMacLookup, VendorNotFoundError
+from mac_vendor_lookup import MacLookup, VendorNotFoundError
 from scapy.layers.dot11 import Dot11, Dot11Beacon, Dot11Elt, RadioTap
 from scapy.layers.eap import EAPOL
 from scapy.all import sniff
@@ -11,7 +11,6 @@ logger = setup_logger(__name__)
 
 
 class Sniffer:
-    BaseMacLookup.cache_path = os.path.join(os.path.dirname(__file__),"vendorMacCache")
 
     def __init__(self, db_interface, interfaces, network_update_callback):
         self.db_interface = db_interface
@@ -22,8 +21,6 @@ class Sniffer:
         self.known_aps = set()
         self.known_clients = set()
         self.mac_lookup = MacLookup()
-        if not os.path.isfile(BaseMacLookup.cache_path):
-            self.mac_lookup.update_vendors()
 
     def start(self):
         """ Start a sniffer on a new thread """
