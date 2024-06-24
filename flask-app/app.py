@@ -5,13 +5,13 @@ This module connects the backend sniffer/deauth component to the frontend site u
 import json
 from flask_socketio import SocketIO, emit
 from flask import Flask, render_template
-import network_fetcher
+from .network_fetcher import NetworkFetcher
 
 app = Flask(__name__)
 sio = SocketIO(app, debug=True)
 
 DB_CONFIG = {"host": "localhost", "username": "admin", "password": "P7Jyd3A32t", "database": "network"}
-network_fetcher = network_fetcher.NetworkFetcher(DB_CONFIG)
+network_fetcher = NetworkFetcher(DB_CONFIG)
 
 
 def broadcast_network_update_msg(data):
