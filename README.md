@@ -7,6 +7,7 @@ By double tapping on an AP, a channel switch annoncement attack is performed. Th
 ![image](https://github.com/i74578/DTU-34229-Deauther/assets/26153040/8c2cc6a0-0fd0-4d1e-a89b-9732a0e8bc22)
 
 # Prerequisites
+- This program is only tested on Ubuntu 24.04, and thereby is the recommended distro for running this project
 - One or more network cards supporting monitor mode is required.
 - A mariadb database with the following tables is required:
 ```
@@ -46,11 +47,15 @@ unmanaged-devices=type:wifi
 
 # Installation
 ```
+git clone https://github.com/i74578/CyberHunter.git
+cd CyberHunter
+python3 -m venv .venv
+source .venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
 # Usage
 To use the program:
 - Set the config values in the CyberHunter/core.py file
-- Run the flask application located in the flask directory
-- Run the CyberHunter/core.py file
+- Run the flask application using: ```flask --app flask-app/app.py run --host 0.0.0.0```
+- Run the CyberHunter component using: ```sudo .venv/bin/python3 CyberHunter/core.py```
