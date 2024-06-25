@@ -48,7 +48,6 @@ def on_set_mode(data):
 
     elif mode == "deauth_attack":
         # If deauth attack activated, start deauther with "deauth_attack" parameter
-        print(db_interface.get_ap(client="e00af66b2b65"))
         logger.info("Starting deauth attack against %s", data['target'])
         deauther = Deauther(db_interface, INTERFACES, data['target'], "deauth_attack")
         deauther.start()
